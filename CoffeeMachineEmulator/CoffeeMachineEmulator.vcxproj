@@ -130,12 +130,15 @@
     <ClCompile Include="CoffeeMachine.cpp" />
     <ClCompile Include="CoffeeMachineEmulator.cpp" />
     <ClCompile Include="DrinkProgram.cpp" />
+    <ClCompile Include="MilkReservoir.cpp" />
+    <ClCompile Include="validationReservoirInput\validationReservoirInput.cpp" />
     <ClCompile Include="WaterReservoir.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoffeeMachine.h" />
     <ClInclude Include="DrinkProgram.h" />
     <ClInclude Include="MilkReservoir.h" />
+    <ClInclude Include="validationReservoirInput\validationReservoirInput.h" />
     <ClInclude Include="WaterReservoir.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

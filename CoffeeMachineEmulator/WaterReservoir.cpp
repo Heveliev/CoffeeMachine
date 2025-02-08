@@ -1,5 +1,6 @@
 #include "WaterReservoir.h"
 #include <iostream>
+#include "./validationReservoirInput/validationReservoirInput.h"
 
 void WaterReservoir::showOperations()
 {
@@ -11,9 +12,27 @@ void WaterReservoir::showOperations()
 
 void WaterReservoir::receiveInput()
 {
-    //TODO, general: Validate input
-    std::cout << "Choice: ";
-    std::cin >> m_Operation;
+    Validation status = Validation::Invalid;
+    int input = 0;
+    while (status != Validation::Success)
+    {
+
+        std::cout << "Choice: ";
+        std::cin >> input;
+        status = validationReservoirInput(input);
+        if (status == Validation::Success)
+        {
+            m_Operation = input;
+            break;
+        }
+
+        if (status == Validation::Invalid)
+        {
+            std::cout << "Invalid Value" << std::endl << std::endl;
+            continue;
+        }
+    }
+
 }
 
 void WaterReservoir::update()
