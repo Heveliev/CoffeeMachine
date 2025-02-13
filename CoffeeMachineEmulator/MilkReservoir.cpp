@@ -1,7 +1,6 @@
 #include "MilkReservoir.h"
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <ctime>
 #include "./validationReservoirInput/validationReservoirInput.h"
 
 void MilkReservoir::showOperations()
@@ -61,30 +60,31 @@ void MilkReservoir::update()
     }
 }
 
+void MilkReservoir::empty()
+{
+    m_Volume = 0.0f;
+    m_milkState = MilkState::Fresh;
+    m_startTime = 0;
+}
 
 void MilkReservoir::fill(float volume)
 {
     m_milkState = MilkState::Fresh;
+    m_startTime = timeNow();
     m_Volume = std::min(volume, MaxVolume);
-    m_lastUpdated = std::chrono::steady_clock::now();
-    startSpoilTimer();
 }
 
+MilkState MilkReservoir::getMilkState()
+{ 
+    int time = (timeNow() - m_startTime);
+    if (time > m_spoilTime)
+    {
+        m_milkState = MilkState::Spoiled;
+    }
+    return m_milkState; 
+}
 
-void MilkReservoir::startSpoilTimer()
+int MilkReservoir::timeNow()
 {
-    std::thread([this]()
-        {
-            while (true)
-            {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-                std::chrono::seconds::rep duration = std::chrono::duration_cast<std::chrono::seconds>(now - m_lastUpdated).count();
-                if (duration >= m_spoilTime)
-                {
-                    m_milkState = MilkState::Spoiled;
-                    break;
-                }
-            }
-        }).detach();
+	return static_cast<int>(std::time(nullptr));
 }

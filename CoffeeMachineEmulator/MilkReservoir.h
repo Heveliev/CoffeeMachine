@@ -1,6 +1,5 @@
 #pragma once
 #include <algorithm>
-#include <chrono>
 
 
 enum class MilkState
@@ -20,13 +19,11 @@ public:
     void fill(float volume);
 
     void getMilk(float volume) { m_Volume -= volume; }
-    MilkState getMilkState() { return m_milkState; }
 
-    void empty() 
-    { 
-        m_Volume = 0.0f; 
-        m_milkState = MilkState::Fresh;
-    }
+    MilkState getMilkState();
+
+    void empty();
+
     float getVolume() const { return m_Volume; }
 
     void update();
@@ -37,13 +34,13 @@ public:
     //until the MilkReservoir is emptied and filled once again
 
 private:
-    void startSpoilTimer();
+    int timeNow();
 
 private:
 
     int m_Operation = -1;
     int m_spoilTime = 20;
-    std::chrono::steady_clock::time_point m_lastUpdated;
+    int m_startTime = 0;
     float m_Volume = 0.0f;
     const float MaxVolume = 2.0f;
     MilkState m_milkState = MilkState::Fresh;

@@ -23,7 +23,7 @@ void DrinkProgram::showInfo()
     }
 }
 
-void DrinkProgram::printPreparation(std::string drinkName)
+void DrinkProgram::printPreparation(const std::string& drinkName)
 {
     std::cout << "\n\nGrrr ";
 

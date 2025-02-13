@@ -26,7 +26,7 @@ public:
     DrinkProgram(DrinkType type, class CoffeeMachine& context); //forward declaration of CoffeeMachine class, to not include header here, only in .cpp
 
     void showInfo();
-    void printPreparation(std::string drinkName);
+    void printPreparation(const std::string& drinkName);
     DrinkProgramStatus prepare();
 
 private:
