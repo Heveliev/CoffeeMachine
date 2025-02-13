@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\validationReservoirInput">
+      <UniqueIdentifier>{1f8d3b28-206c-4fb0-bbb2-ddf6310969b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\validationReservoirInput">
+      <UniqueIdentifier>{f442e2b2-5272-431b-bac9-1385cda1d711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoffeeMachineEmulator.cpp">
@@ -27,6 +33,12 @@
     <ClCompile Include="WaterReservoir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MilkReservoir.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="validationReservoirInput\validationReservoirInput.cpp">
+      <Filter>Source Files\validationReservoirInput</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoffeeMachine.h">
@@ -40,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="MilkReservoir.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="validationReservoirInput\validationReservoirInput.h">
+      <Filter>Header Files\validationReservoirInput</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

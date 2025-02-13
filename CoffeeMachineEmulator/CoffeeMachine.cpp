@@ -30,6 +30,9 @@ void CoffeeMachine::showMenu()
     case CoffeeMachineState::WaterReservoir:
         m_waterReservoir.showOperations();
         break;
+    case CoffeeMachineState::MilkReservoir:
+        m_milkReservoir.showOperations();
+        break;
     default:
         break;
     }
@@ -50,6 +53,9 @@ void CoffeeMachine::receiveInput()
     }
     case CoffeeMachineState::WaterReservoir:
         m_waterReservoir.receiveInput();    //switching to reservoir input handler
+        break;
+    case CoffeeMachineState::MilkReservoir:
+        m_milkReservoir.receiveInput();
         break;
     default:
         break;
@@ -80,6 +86,10 @@ void CoffeeMachine::update()
         m_waterReservoir.update();
         m_currentState = CoffeeMachineState::MainMenu;
         break;
+    case CoffeeMachineState::MilkReservoir:
+        m_milkReservoir.update();
+        m_currentState = CoffeeMachineState::MainMenu;
+        break;
     case CoffeeMachineState::PowerOffRequest:
     {
         powerOff();
@@ -88,6 +98,16 @@ void CoffeeMachine::update()
     case CoffeeMachineState::LowWaterError:
     {
         showLowWaterError();
+        break;
+    }
+    case CoffeeMachineState::LowMilkError:
+    {
+        showLowMilkError();
+        break;
+    }
+    case CoffeeMachineState::SpoiledMilkError:
+    {
+        showSpoiledMilkError();
         break;
     }
     case CoffeeMachineState::CoffeeGrain:
@@ -101,11 +121,15 @@ void CoffeeMachine::powerOn()
 {
     if (m_currentChoice == 1)
     {
-        std::cout << "\nGrrrr... Self diagnostics... Checking water level...\n";
+        std::cout << "\nGrrrr... Self diagnostics... Checking water and milk level...\n";
 
         if (m_waterReservoir.getVolume() <= 0.0f)
         {
             m_currentState = CoffeeMachineState::LowWaterError;
+        }
+        if (m_milkReservoir.getVolume() <= 0.0f)
+        {
+            m_currentState = CoffeeMachineState::LowMilkError;
         }
         else
         {
@@ -129,6 +153,9 @@ void CoffeeMachine::selectNewMenuFromMain()
         break;
     case 2:
         m_currentState = CoffeeMachineState::WaterReservoir;
+        break;
+    case 3:
+        m_currentState = CoffeeMachineState::MilkReservoir;
         break;
     case 5: 
         m_currentState = CoffeeMachineState::PowerOffRequest;
@@ -173,6 +200,16 @@ void CoffeeMachine::showLowWaterError()
     std::cout << "LOW WATER, please refill the water container!\n";
     m_currentState = CoffeeMachineState::MainMenu;
 }
+void CoffeeMachine::showLowMilkError()
+{
+    std::cout << "LOW MILK, please refill the milk container!\n";
+    m_currentState = CoffeeMachineState::MainMenu;
+}
+void CoffeeMachine::showSpoiledMilkError()
+{
+    std::cout << "MILK SPOILED, please replace the milk!\n";
+    m_currentState = CoffeeMachineState::MainMenu;
+}
 
 void CoffeeMachine::prepareDrink()
 {
@@ -192,5 +229,13 @@ void CoffeeMachine::prepareDrink()
     else if (status == DrinkProgramStatus::LowWater)
     {
         m_currentState = CoffeeMachineState::LowWaterError;
+    }
+    else if (status == DrinkProgramStatus::LowMilk)
+    {
+        m_currentState = CoffeeMachineState::LowMilkError;
+    }
+    else if (status == DrinkProgramStatus::SpoiledMilk)
+    {
+        m_currentState = CoffeeMachineState::SpoiledMilkError;
     }
 }
