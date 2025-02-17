@@ -13,6 +13,9 @@ public:
 
 protected:
     void changeState(CoffeeMachine& context, CoffeeMachineState* newState);
+
+protected:
+    int input;
 };
 
 class Sleep : public CoffeeMachineState

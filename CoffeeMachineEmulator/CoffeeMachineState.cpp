@@ -19,15 +19,16 @@ void Sleep::showMenu(CoffeeMachine& context)
 void Sleep::receiveInput(CoffeeMachine& context)
 {
 	std::cout << "Choice: ";
-	std::cin >> context.m_currentChoice;
+	std::cin >> input;
+	context.setCurrentChoice(input);
 }
 void Sleep::update(CoffeeMachine& context)
 {
-	if (context.m_currentChoice == 1)
+	if (context.getCurrentChoice() == 1)
 	{
 		std::cout << "\nGrrrr... Self diagnostics... Checking water level...\n";
 
-		if (context.m_waterReservoir->getVolume() <= 0.0f)
+		if (context.getWaterReservoir()->getVolume() <= 0.0f)
 		{	
 			changeState(context, new LowWater());
 		}
@@ -45,7 +46,7 @@ void PowerOff::showMenu(CoffeeMachine& context)
 }
 void PowerOff::update(CoffeeMachine& context)
 {
-	context.m_powerOffRequest = true;
+	context.setPowerOffRequest(true);
 }
 
 // MainMenu
@@ -62,11 +63,12 @@ void MainMenu::showMenu(CoffeeMachine& context)
 void MainMenu::receiveInput(CoffeeMachine& context)
 {
 	std::cout << "Choice: ";
-	std::cin >> context.m_currentChoice;
+	std::cin >> input;
+	context.setCurrentChoice(input);
 }
 void MainMenu::update(CoffeeMachine& context)
 {
-	switch (context.m_currentChoice)
+	switch (context.getCurrentChoice())
 	{
 	case 1:
 		changeState(context, new DrinkSelection());
@@ -103,12 +105,13 @@ void DrinkSelection::showMenu(CoffeeMachine& context)
 void DrinkSelection::receiveInput(CoffeeMachine& context)
 {
 	std::cout << "Choice: ";
-	std::cin >> context.m_currentChoice;
+	std::cin >> input;
+	context.setCurrentChoice(input);
 }
 void DrinkSelection::update(CoffeeMachine& context)
 {
 	context.selectDrink();
-	if (context.m_SelectedDrink != nullptr)
+	if (context.getSelectedDrink() != nullptr)
 	{
 		changeState(context, new DrinkPreparation());
 	}
@@ -121,13 +124,13 @@ void DrinkSelection::update(CoffeeMachine& context)
 // DrinkPreparation
 void DrinkPreparation::update(CoffeeMachine& context)
 {
-	if (context.m_SelectedDrink == nullptr)
+	if (context.getSelectedDrink() == nullptr)
 	{
 		changeState(context, new DrinkSelection());
 		return;
 	}
 
-	const DrinkProgramStatus status = context.m_SelectedDrink->prepare();
+	const DrinkProgramStatus status = context.getSelectedDrink()->prepare();
 
 	if (status == DrinkProgramStatus::Success)
 	{
@@ -164,11 +167,12 @@ void Clean::showMenu(CoffeeMachine& context)
 void Clean::receiveInput(CoffeeMachine& context)
 {
 	std::cout << "Choice: ";
-	std::cin >> context.m_currentChoice;
+	std::cin >> input;
+	context.setCurrentChoice(input);
 }
 void Clean::update(CoffeeMachine& context)
 {
-	switch (context.m_currentChoice)
+	switch (context.getCurrentChoice())
 	{
 	case 1:
 		DrinkProgram::clean();
@@ -183,45 +187,45 @@ void Clean::update(CoffeeMachine& context)
 // WaterReservoir
 void WaterReservoirState::showMenu(CoffeeMachine& context)
 {
-	context.m_waterReservoir->showOperations();
+	context.getWaterReservoir()->showOperations();
 }
 void WaterReservoirState::receiveInput(CoffeeMachine& context)
 {
-	context.m_waterReservoir->receiveInput();
+	context.getWaterReservoir()->receiveInput();
 }
 void WaterReservoirState::update(CoffeeMachine& context)
 {
-	context.m_waterReservoir->update();
+	context.getWaterReservoir()->update();
 	changeState(context, new MainMenu());
 }
 
 // MilkReservoir
 void MilkReservoirState::showMenu(CoffeeMachine& context)
 {
-	context.m_milkReservoir->showOperations();
+	context.getMilkReservoir()->showOperations();
 }
 void MilkReservoirState::receiveInput(CoffeeMachine& context)
 {
-	context.m_milkReservoir->receiveInput();
+	context.getMilkReservoir()->receiveInput();
 }
 void MilkReservoirState::update(CoffeeMachine& context)
 {
-	context.m_milkReservoir->update();
+	context.getMilkReservoir()->update();
 	changeState(context, new MainMenu());
 }
 
 // CoffeeGrainsContainer
 void CoffeeGrainsContainerState::showMenu(CoffeeMachine& context)
 {
-	context.m_coffeeContainer->showOperations();
+	context.getCoffeeContainer()->showOperations();
 }
 void CoffeeGrainsContainerState::receiveInput(CoffeeMachine& context)
 {
-	context.m_coffeeContainer->receiveInput();
+	context.getCoffeeContainer()->receiveInput();
 }
 void CoffeeGrainsContainerState::update(CoffeeMachine& context)
 {
-	context.m_coffeeContainer->update();
+	context.getCoffeeContainer()->update();
 	changeState(context, new MainMenu());
 }
 
@@ -238,26 +242,27 @@ void CoffeeStrength::showMenu(CoffeeMachine& context)
 void CoffeeStrength::receiveInput(CoffeeMachine& context)
 {
 	std::cout << "Choice: ";
-	std::cin >> context.m_currentChoice;
+	std::cin >> input;
+	context.setCurrentChoice(input);
 }
 void CoffeeStrength::update(CoffeeMachine& context)
 {
-	switch (context.m_currentChoice)
+	switch (context.getCurrentChoice())
 	{
 	case 1:
-		Coffee::setStrength(context.m_currentChoice);
+		Coffee::setStrength(context.getCurrentChoice());
 		break;
 	case 2:
-		Coffee::setStrength(context.m_currentChoice);
+		Coffee::setStrength(context.getCurrentChoice());
 		break;
 	case 3:
-		Coffee::setStrength(context.m_currentChoice);
+		Coffee::setStrength(context.getCurrentChoice());
 		break;
 	case 4:
-		Coffee::setStrength(context.m_currentChoice);
+		Coffee::setStrength(context.getCurrentChoice());
 		break;
 	case 5:
-		Coffee::setStrength(context.m_currentChoice);
+		Coffee::setStrength(context.getCurrentChoice());
 		break;
 	default:
 		Coffee::setStrength(3);

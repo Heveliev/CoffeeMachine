@@ -52,13 +52,20 @@ public:
 
 
 
-    WaterReservoir* getWaterReservoir() { return m_waterReservoir; }
-    MilkReservoir* getMilkReservoir() { return m_milkReservoir; }
-    CoffeeGrainsContainer* getCoffeeContainer() { return m_coffeeContainer; }
+    WaterReservoir* getWaterReservoir() const { return m_waterReservoir; }
+    MilkReservoir* getMilkReservoir() const { return m_milkReservoir; }
+    CoffeeGrainsContainer* getCoffeeContainer() const { return m_coffeeContainer; }
 
-private:
+    int getCurrentChoice() const { return m_currentChoice; }
+    void setCurrentChoice(const int& input) { m_currentChoice = input; }
+    bool getPowerOffRequest() const { return m_powerOffRequest; }
+    void setPowerOffRequest(const bool& powerOff) { m_powerOffRequest = powerOff; }
+
+    DrinkProgram* getSelectedDrink() const { return m_SelectedDrink; }
+
     void showListOfDrinks();
     void selectDrink();
+
 
 private:
     CoffeeMachineState* m_currentState = nullptr;
@@ -72,18 +79,4 @@ private:
     
     int m_currentChoice = -1;
     bool m_powerOffRequest = false;
-private:
-    friend class DrinkProgram;
-
-    friend class CoffeeMachineState;
-    friend class Sleep;
-    friend class PowerOff;
-    friend class MainMenu;
-    friend class DrinkSelection;
-    friend class DrinkPreparation;
-    friend class Clean;
-    friend class WaterReservoirState;
-    friend class MilkReservoirState;
-    friend class CoffeeGrainsContainerState;
-    friend class CoffeeStrength;
 };

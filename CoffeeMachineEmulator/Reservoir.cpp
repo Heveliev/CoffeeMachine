@@ -47,7 +47,7 @@ void Reservoir::update()
     {
         float newVolume = 0.0f;
         std::cout << "Filling...";
-        std::cout << "How much have you filled up? (Max: " << m_MaxVolume << "l) ";
+        std::cout << "How much have you filled up? (Max: " << m_MaxVolume << m_unit << ") ";
         std::cin >> newVolume;
         fill(newVolume);
         std::cout << std::endl;
