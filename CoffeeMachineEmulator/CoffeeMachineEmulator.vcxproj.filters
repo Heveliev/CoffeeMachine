@@ -19,6 +19,12 @@
     <Filter Include="Header Files\validationReservoirInput">
       <UniqueIdentifier>{f442e2b2-5272-431b-bac9-1385cda1d711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{49622f5a-f4d6-4651-a522-a43e0cdda72f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{6590dfb8-7a41-453f-ac38-974f0f464994}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CoffeeMachineEmulator.cpp">
@@ -30,31 +36,37 @@
     <ClCompile Include="DrinkProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WaterReservoir.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MilkReservoir.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="validationReservoirInput\validationReservoirInput.cpp">
       <Filter>Source Files\validationReservoirInput</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Reservoir.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CoffeeMachineState.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoffeeMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WaterReservoir.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DrinkProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MilkReservoir.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="validationReservoirInput\validationReservoirInput.h">
       <Filter>Header Files\validationReservoirInput</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\utils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Reservoir.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CoffeeMachineState.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

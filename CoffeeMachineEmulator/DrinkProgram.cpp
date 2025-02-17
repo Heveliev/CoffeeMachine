@@ -1,115 +1,260 @@
 ﻿#include "DrinkProgram.h"
 #include "CoffeeMachine.h"
+#include "./utils/utils.h"
+
 #include <chrono>
 #include <thread>
-#include <string>
 
-DrinkProgram::DrinkProgram(DrinkType type, CoffeeMachine& context) : 
-    m_drinkType(type), 
+
+// DrinkProgram class
+unsigned short DrinkProgram::m_useAmount = 0;
+DrinkProgram::DrinkProgram(std::string drinkName, CoffeeMachine& context) :
+    m_name(drinkName),
     m_context(context) {}
+
+
+DrinkProgram::DrinkProgram(std::string drinkName, unsigned short temperature, CoffeeMachine& context) :
+    m_name(drinkName),
+    m_temperature(temperature),
+    m_context(context) {}
+
+void DrinkProgram::finishPreparation()
+{
+    std::cout << "DONE!\n\n";
+    status = DrinkProgramStatus::Success;
+    m_useAmount++;
+}
+
+void DrinkProgram::checkUses()
+{
+    if (m_useAmount > m_useAmountMax) { status = DrinkProgramStatus::CleanNeeded; }
+}
 
 void DrinkProgram::showInfo()
 {
-    switch (m_drinkType)
+    std::cout << m_name;
+}
+
+// Coffe class
+unsigned short Coffee::m_strength = 3;
+
+void Coffee::checkReservoirs()
+{
+    if (m_context.getWaterReservoir()->getVolume() < EsspressoWaterVolume)
     {
-    case DrinkType::Espresso:
-        std::cout << "Espresso!";
-        break;
-    case DrinkType::Cappuccino:
-        std::cout << "Cappuccino!";
-        break;
-    default:
-        break;
+        status = DrinkProgramStatus::LowWater;
+        return;
+    }
+    else if (m_context.getCoffeeContainer()->getVolume() < m_strength * m_coffeeDose)
+    {
+        status = DrinkProgramStatus::LowCoffeeGrains;
+    }
+    else 
+    {
+        status = DrinkProgramStatus::Success;
+    }
+
+    
+}
+
+void Coffee::setStrength(unsigned short strength)
+{
+    m_strength = strength;
+}
+
+void Coffee::grindGrains()
+{
+    std::cout << "\n\nGr";
+    for (int i = 0; i < 7; i++)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << "r";
     }
 }
 
-void DrinkProgram::printPreparation(const std::string& drinkName)
+
+// Espresso class
+DrinkProgramStatus Espresso::prepare()
 {
-    std::cout << "\n\nGrrr ";
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << ".";
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << ".";
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << ".";
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    m_context.getCoffeeContainer()->useVolume(static_cast<float>(m_strength * m_coffeeDose));
+    m_context.getWaterReservoir()->useVolume(EsspressoWaterVolume);
 
-    std::cout << "\nPreparing... " << drinkName << "... ";
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    for (int i = 5; i > 3; i--)
+    grindGrains();
+    printPreparation(m_name);
+
+    DrinkProgram::finishPreparation();
+    return status;
+}
+
+//Cappuccino class
+void Cappuccino::checkReservoirs()
+{
+    Coffee::checkReservoirs();
+    if (status != DrinkProgramStatus::Success) return;
+
+    if (m_context.getMilkReservoir()->getMilkState() != MilkState::Fresh)
     {
-        std::cout << i << ".";
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << ".";
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        status = DrinkProgramStatus::SpoiledMilk;
     }
+    else if (m_context.getMilkReservoir()->getVolume() < MilkVolume)
+    {
+        status = DrinkProgramStatus::LowMilk;
+    }
+    else 
+    {
+        status = DrinkProgramStatus::Success;
+    }
+}
 
-    std::cout << "..Hanging... ";
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+DrinkProgramStatus Cappuccino::prepare()
+{
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
+
+    m_context.getCoffeeContainer()->useVolume(static_cast<float>(m_strength * m_coffeeDose));
+    m_context.getWaterReservoir()->useVolume(EsspressoWaterVolume);
+    m_context.getMilkReservoir()->useVolume(MilkVolume);
+
+    grindGrains();
+
+    printPreparation("Milk");
+    printPreparation("Esspresso");
+    printPreparation(m_name);
+
+    DrinkProgram::finishPreparation();
+    return status;
+}
+
+//Latte class
+void Latte::checkReservoirs()
+{
+    Coffee::checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return;
+
+    if (m_context.getMilkReservoir()->getMilkState() != MilkState::Fresh)
+    {
+        status = DrinkProgramStatus::SpoiledMilk;
+    }
+    else if (m_context.getMilkReservoir()->getVolume() < MilkVolume)
+    {
+        status = DrinkProgramStatus::LowMilk;
+    }
+    else
+    {
+        status = DrinkProgramStatus::Success;
+    }
+}
+
+DrinkProgramStatus Latte::prepare()
+{
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
+
+    m_context.getCoffeeContainer()->useVolume(static_cast<float>(m_strength * m_coffeeDose));
+    m_context.getWaterReservoir()->useVolume(EsspressoWaterVolume);
+    m_context.getMilkReservoir()->useVolume(MilkVolume);
+
+    grindGrains();
+
+    printPreparation("Milk");
+    printPreparation("Esspresso");
+    printPreparation(m_name);
+
+    DrinkProgram::finishPreparation();
+    return status;
+}
+
+// Tea class
+void Tea::checkReservoirs()
+{
+    if (m_context.getWaterReservoir()->getVolume() < m_waterAmount)
+    {
+        status = DrinkProgramStatus::LowWater;
+        return;
+    }
+    else
+    {
+        status = DrinkProgramStatus::Success;
+    }
+}
+
+void Tea::prepareWater()
+{
+    std::cout << "\n\nHeating water to a temperature of " << m_temperature << " degrees.\n" << std::endl;
+}
+
+// BlackTea class
+DrinkProgramStatus BlackTea::prepare()
+{
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
+    m_context.getWaterReservoir()->useVolume(m_waterAmount);
+
+    prepareWater();
+    printPreparation(m_name);
+
+    DrinkProgram::finishPreparation();
+    return status;
+}
+
+//GreenTea class
+DrinkProgramStatus GreenTea::prepare()
+{
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
+    m_context.getWaterReservoir()->useVolume(m_waterAmount);
+
+    prepareWater();
+    printPreparation(m_name);
+
+    DrinkProgram::finishPreparation();
+    return status;
+}
+
+//MatchaTea class
+void MatchaTea::checkReservoirs()
+{
+    Tea::checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return;
+
+    if (m_context.getMilkReservoir()->getMilkState() != MilkState::Fresh)
+    {
+        status = DrinkProgramStatus::SpoiledMilk;
+    }
+    else if (m_context.getMilkReservoir()->getVolume() < MilkVolume)
+    {
+        status = DrinkProgramStatus::LowMilk;
+    }
+    else
+    {
+        status = DrinkProgramStatus::Success;
+    }
 }
 
 
-DrinkProgramStatus DrinkProgram::prepare()
+DrinkProgramStatus MatchaTea::prepare()
 {
-    switch (m_drinkType)
-    {
-    case DrinkType::Espresso:
-    {
-        if (m_context.m_waterReservoir.getVolume() < EsspressoVolume)
-        {
-            return DrinkProgramStatus::LowWater;
-        }
+    checkReservoirs();
+    DrinkProgram::checkUses();
+    if (status != DrinkProgramStatus::Success) return status;
 
-        m_context.m_waterReservoir.useWater(EsspressoVolume);
+    m_context.getWaterReservoir()->useVolume(m_waterAmount);
+    m_context.getMilkReservoir()->useVolume(MilkVolume);
+    prepareWater();
 
-        printPreparation("Esspresso");
+    printPreparation("Milk");
+    printPreparation(m_name);
 
-        std::cout << "DONE!\n\n";
-
-        return DrinkProgramStatus::Success;
-    }
-    case DrinkType::Cappuccino:
-
-        if (m_context.m_waterReservoir.getVolume() < EsspressoVolume)
-        {
-            return DrinkProgramStatus::LowWater;
-        }
-
-        if (m_context.m_milkReservoir.getMilkState() != MilkState::Fresh)
-        {
-            return DrinkProgramStatus::SpoiledMilk;
-        }
-
-        if (m_context.m_milkReservoir.getVolume() < CappuccinoMilkVolume)
-        {
-            return DrinkProgramStatus::LowMilk;
-        }
-
-
-        m_context.m_waterReservoir.useWater(EsspressoVolume);
-        m_context.m_milkReservoir.getMilk(CappuccinoMilkVolume);
-
-        printPreparation("Milk");
-        printPreparation("Esspresso");
-        printPreparation("Cappuccino");
-
-        std::cout << "DONE!\n\n";
-
-        return DrinkProgramStatus::Success;
-
-        //TODO HW: Implement Cappuccino logic
-        //Check Water, Milk... Return appropriate error if smth goes wrong
-
-        //Note: Some coffeeMachineі don't check milk strictly, that is they try
-        //to prepare the drink even if there's not enough milk present, up to you to decide exact logic 
-
-        //print "Preparing msgs with proper steps ideally"
-
-        break;
-    default:
-        break;
-    };
-
-    return DrinkProgramStatus::Success;
+    DrinkProgram::finishPreparation();
+    return status;
 }
