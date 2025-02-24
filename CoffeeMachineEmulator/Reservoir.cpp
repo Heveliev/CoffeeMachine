@@ -1,33 +1,33 @@
-#include "MilkReservoir.h"
+#include "Reservoir.h"
 #include <iostream>
-#include <ctime>
+#include <string>
 #include "./validationReservoirInput/validationReservoirInput.h"
 
-void MilkReservoir::showOperations()
+
+void Reservoir::showOperations()
 {
-    std::cout << "\n--- Current milk level: " << getVolume() << "l out of " << MaxVolume << "l max ---\n";
+    std::cout << "\n--- Current " << m_content << " level: " << getVolume() << m_unit << " out of " 
+        << m_MaxVolume << m_unit << " max ---\n";
     std::cout << "1. Empty reservoir\n";
-    std::cout << "2. Fill up with milk\n";
+    std::cout << "2. Fill up with " << m_content << std::endl;
     std::cout << "3. Back to main\n";
 }
 
-void MilkReservoir::receiveInput()
+
+void Reservoir::receiveInput()
 {
-    //TODO, general: Validate input
     Validation status = Validation::Invalid;
     int input = 0;
     while (status != Validation::Success)
     {
-
         std::cout << "Choice: ";
         std::cin >> input;
         status = validationReservoirInput(input);
-        if (status == Validation::Success) 
+        if (status == Validation::Success)
         {
             m_Operation = input;
             break;
         }
-
         if (status == Validation::Invalid)
         {
             std::cout << "Invalid Value" << std::endl << std::endl;
@@ -36,8 +36,7 @@ void MilkReservoir::receiveInput()
     }
 }
 
-
-void MilkReservoir::update()
+void Reservoir::update()
 {
     switch (m_Operation)
     {
@@ -48,7 +47,7 @@ void MilkReservoir::update()
     {
         float newVolume = 0.0f;
         std::cout << "Filling...";
-        std::cout << "How much have you filled up? (Max: " << MaxVolume << "l) ";
+        std::cout << "How much have you filled up? (Max: " << m_MaxVolume << m_unit << ") ";
         std::cin >> newVolume;
         fill(newVolume);
         std::cout << std::endl;
@@ -60,6 +59,8 @@ void MilkReservoir::update()
     }
 }
 
+
+// MilkReservoir
 void MilkReservoir::empty()
 {
     m_Volume = 0.0f;
@@ -71,20 +72,20 @@ void MilkReservoir::fill(float volume)
 {
     m_milkState = MilkState::Fresh;
     m_startTime = timeNow();
-    m_Volume = std::min(volume, MaxVolume);
+    m_Volume = std::min(volume, m_MaxVolume);
 }
 
 MilkState MilkReservoir::getMilkState()
-{ 
+{
     int time = (timeNow() - m_startTime);
-    if (time > m_spoilTime)
+    if (time > m_spoilTime && m_startTime != 0)
     {
         m_milkState = MilkState::Spoiled;
     }
-    return m_milkState; 
+    return m_milkState;
 }
 
 int MilkReservoir::timeNow()
 {
-	return static_cast<int>(std::time(nullptr));
+    return static_cast<int>(std::time(nullptr));
 }

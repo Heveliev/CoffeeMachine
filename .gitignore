@@ -44,3 +44,8 @@
 *.recipe
 *.ilk
 *.vs
+
+
+*.ilk
+*.vxxproj
+*.filters
